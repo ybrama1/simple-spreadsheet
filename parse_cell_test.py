@@ -15,6 +15,9 @@ class TestParseCell(unittest.TestCase):
         self.assertEqual(parse_cell("=A1+5"), ("A1", "+", 5.0))
         self.assertEqual(parse_cell("=B2-3.5"), ("B2", "-", 3.5))
 
+    def test_empty_cell(self):
+        self.assertEqual(parse_cell(""), (None, None, 0))
+
     def test_invalid_input(self):
         with self.assertRaises(ValueError):
             parse_cell("invalid")

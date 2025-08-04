@@ -18,8 +18,8 @@ def cell_to_index(cell_ref: str) -> List[int]:
     """
     if not re.match(r'^[A-Z][0-9]+$', cell_ref): # Check for valid format, with regular expression
         raise ValueError(f"Invalid cell reference: {cell_ref}")
-    
-    col = ord(cell_ref[0]) - ord('A')
+
+    col = ord(cell_ref[0]) - ord('A')  # Convert column letter to index (0-based)
     row = int(cell_ref[1:]) - 1
     return [row, col]
 
@@ -30,6 +30,8 @@ def parse_cell(cell: str) -> tuple[Optional[str], Optional[str], Optional[float]
     - "=A1" to str (single reference)
     - "=A1 + 5" to tuple (ref1, op, value)
     """
+    if cell == "":
+        return (None, None, 0)  # Empty cell
 
     # Check if the cell is a number
     #regular expression to match a number, which can be an integer or a float.
@@ -38,12 +40,12 @@ def parse_cell(cell: str) -> tuple[Optional[str], Optional[str], Optional[float]
 
 
     #regular expression to match single reference or expression.
-    #group1 is the reference, group2 is the operator, and group3 is the value.
+    #group1 is the reference, group3 is the operator, and group4 is the value.
     match = re.match(r'^=([A-Z]\d+)(([\+\-])(\d+(\.\d+)?))?$', cell)
     if match:
         ref = match.group(1)
-        op = match.group(3) if match.group(3) else None
-        value = float(match.group(4)) if match.group(4) else None
+        op = match.group(3) if match.group(3) else None  # Operator can be '+' or '-'
+        value = float(match.group(4)) if match.group(4) else None  # Convert value to float if it exists
         return (ref, op, value)
     
     raise ValueError(f"Invalid cell content: {cell}")
@@ -60,8 +62,8 @@ def read_cell(cell: str, spreadsheet: Spreadsheet) -> float:
         return value  # It's a number
     
     row, col = cell_to_index(ref)
-    
-    if row < 0 or row >= len(spreadsheet) or col < 0 or col >= len(spreadsheet[0]):
+
+    if row < 0 or row >= len(spreadsheet) or col < 0 or col >= len(spreadsheet[0]):  # Check if the reference is within bounds
         raise ValueError(f"Cell reference {ref} out of bounds.")
     
     cell_value = read_cell(spreadsheet[row][col], spreadsheet)
