@@ -113,7 +113,7 @@ python -m unittest read_spreadsheet_test.py
 Or run all tests:
 
 ```bash
-python -m unittest discover
+python -m unittest discover -p "*test.py"
 ```
 
 ## Requirements
@@ -140,11 +140,3 @@ simple_spreadsheet/
 - No support for multiplication, division, or complex formulas
 - No support for string values or mixed data types
 - No circular reference detection
-
-## Contributing
-
-Feel free to submit issues and enhancement requests!
-
-## License
-
-This project is open source and available under the MIT License.
