@@ -14,6 +14,8 @@ class TestParseCell(unittest.TestCase):
     def test_parse_expression(self):
         self.assertEqual(parse_cell("=A1+5"), ("A1", "+", 5.0))
         self.assertEqual(parse_cell("=B2-3.5"), ("B2", "-", 3.5))
+        self.assertEqual(parse_cell("=2.5+C3"), (2.5, "+", "C3"))
+        self.assertEqual(parse_cell("=A1-B2"), ("A1", "-", "B2"))
 
     def test_empty_cell(self):
         self.assertEqual(parse_cell(""), (None, None, 0))

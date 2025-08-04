@@ -35,42 +35,54 @@ def parse_cell(cell: str) -> tuple[Optional[str], Optional[str], Optional[float]
 
     # Check if the cell is a number
     #regular expression to match a number, which can be an integer or a float.
-    if re.match(r'^\d+(\.\d+)?$', cell):
-        return (None, None, float(cell))
+    float_pattern = r'(\d+(\.\d+)?)'
+    reference_pattern = r'([A-Z][0-9]+)'
+    if re.match(fr'^{float_pattern}$', cell):
+        return (None, None, float(cell))  # It's a number
 
 
     #regular expression to match single reference or expression.
     #group1 is the reference, group3 is the operator, and group4 is the value.
-    match = re.match(r'^=([A-Z]\d+)(([\+\-])(\d+(\.\d+)?))?$', cell)
+    match = re.match(fr'^=({reference_pattern}|{float_pattern})(([\+\-])({float_pattern}|{reference_pattern}))?$', cell)
     if match:
-        ref = match.group(1)
-        op = match.group(3) if match.group(3) else None  # Operator can be '+' or '-'
-        value = float(match.group(4)) if match.group(4) else None  # Convert value to float if it exists
-        return (ref, op, value)
-    
-    raise ValueError(f"Invalid cell content: {cell}")
-
-
+        ref1 = match.group(1) if match.group(1) else None  # Reference like 'A1' or a number
+        op = match.group(6) if match.group(6) else None  # Operator like '+' or '-'
+        ref2 = match.group(7) if match.group(7) else None  # Value or another reference
+    else:
+        raise ValueError(f"Invalid cell content: {cell}")
+    # If ref2 or ref1 is a number, convert it to float
+    if ref1 and re.match(fr'^{float_pattern}$', ref1):
+        ref1 = float(ref1)
+    if ref2 and re.match(fr'^{float_pattern}$', ref2):
+        ref2 = float(ref2)
+    return (ref1, op, ref2)
 
 def read_cell(cell: str, spreadsheet: Spreadsheet) -> float:
     """
     Recursively evaluates the value of a cell
     """
-    ref, op, value = parse_cell(cell)
-    
-    if ref is None:
-        return value  # It's a number
-    
-    row, col = cell_to_index(ref)
+    def value_of_ref(ref: str) -> float:
+        """
+        Returns the value of a cell reference.
+        """
+        if ref.type(float):
+            return ref
+        row, col = cell_to_index(ref)
+        if row < 0 or row >= len(spreadsheet) or col < 0 or col >= len(spreadsheet[0]):
+            raise ValueError(f"Cell reference {ref} is out of bounds.")
+        return read_cell(spreadsheet[row][col], spreadsheet)
+    ref1, op, ref2 = parse_cell(cell)  # Parse the cell content
+    ref1_value = 0
+    if ref1:
+        ref1_value = value_of_ref(ref1)
 
-    if row < 0 or row >= len(spreadsheet) or col < 0 or col >= len(spreadsheet[0]):  # Check if the reference is within bounds
-        raise ValueError(f"Cell reference {ref} out of bounds.")
-    
-    cell_value = read_cell(spreadsheet[row][col], spreadsheet)
-    
+    ref2_value = 0
+    if ref2:
+        ref2_value = value_of_ref(ref2)
+
     if op == '+':
-        return cell_value + value
+        return ref1_value + ref2_value
     elif op == '-':
-        return cell_value - value
+        return ref1_value - ref2_value
     else:
-        return cell_value  # No operation, just return the referenced cell value
+        return ref1_value  # No operation, just return the referenced cell value

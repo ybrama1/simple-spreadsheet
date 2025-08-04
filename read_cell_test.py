@@ -18,6 +18,8 @@ class TestReadCell(unittest.TestCase):
     def test_read_expression(self):
         self.assertEqual(read_cell("=A1-3.5", self.spreadsheet), 43.5)
         self.assertEqual(read_cell("=B2+5", self.spreadsheet), 47.0)
+        self.assertEqual(read_cell("=2.5+C3", self.spreadsheet), 45.5)
+        self.assertEqual(read_cell("=A1-B2", self.spreadsheet), 5.0)
 
     def test_invalid_input(self):
         with self.assertRaises(ValueError):
