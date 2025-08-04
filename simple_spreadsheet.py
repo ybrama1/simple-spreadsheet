@@ -7,16 +7,16 @@ def read_spreadsheet(matrix: Spreadsheet) -> List[List[float]]:
     """
     Evaluates all cells in the matrix and returns a matrix of floats.
     """
-    evaluate_row = lambda row: list(map(lambda cell: read_cell(cell, matrix), row))
+    evaluate_row = lambda row: list(map(lambda cell: read_cell(cell, matrix), row)) # Apply read_cell to each cell in the row
 
-    Spreadsheet = list(map(evaluate_row, matrix))
+    Spreadsheet = list(map(evaluate_row, matrix)) # Apply evaluate_row to each row in the matrix
     return Spreadsheet
 
 def cell_to_index(cell_ref: str) -> List[int]:
     """
     Converts a cell reference like 'B2' into matrix index (row, col).
     """
-    if not re.match(r'^[A-Z]+[0-9]*+$', cell_ref): # Check for valid format, with regular expression
+    if not re.match(r'^[A-Z][0-9]+$', cell_ref): # Check for valid format, with regular expression
         raise ValueError(f"Invalid cell reference: {cell_ref}")
     
     col = ord(cell_ref[0]) - ord('A')
