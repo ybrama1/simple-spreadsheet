@@ -45,11 +45,11 @@ def parse_cell(cell: str) -> tuple[Optional[str], Optional[str], Optional[float]
 
     #regular expression to match single reference or expression.
     #group1 is the reference, group6 is the operator, and group7 is the second reference.
-    match = re.match(fr'^=({reference_pattern}|{float_pattern})(([\+\-])({float_pattern}|{reference_pattern}))?$', cell)
+    match = re.match(fr'^=(?P<ref1>{reference_pattern}|{float_pattern})((?P<op>[\+\-])(?P<ref2>{float_pattern}|{reference_pattern}))?$', cell)
     if match:
-        ref1 = match.group(1) if match.group(1) else None  # Reference like 'A1' or a number
-        op = match.group(6) if match.group(6) else None  # Operator like '+' or '-'
-        ref2 = match.group(7) if match.group(7) else None  # Value or another reference
+        ref1 = match.group("ref1") if match.group("ref1") else None  # Reference like 'A1' or a number
+        op = match.group("op") if match.group("op") else None  # Operator like '+' or '-'
+        ref2 = match.group("ref2") if match.group("ref2") else None  # Value or another reference
     else:
         raise ValueError(f"Invalid cell content: {cell}")
     # If ref2 or ref1 is a number, convert it to float
