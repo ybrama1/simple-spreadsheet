@@ -7,7 +7,7 @@ def read_spreadsheet(matrix: Spreadsheet) -> List[List[float]]:
     """
     Evaluates all cells in the matrix and returns a matrix of floats.
     """
-    if not matrix or not all(map(lambda row: len(row) == len(matrix[0]), matrix)):
+    if not matrix or not all(map(lambda row: len(row) == len(matrix[0]), matrix)): # Check if all rows have the same number of columns
         raise ValueError("Invalid spreadsheet format: all rows must have the same number of columns.")
     evaluate_row = lambda row: list(map(lambda cell: read_cell(cell, matrix), row)) # Apply read_cell to each cell in the row
 
@@ -22,10 +22,10 @@ def cell_to_index(cell_ref: str) -> List[int]:
         raise ValueError(f"Invalid cell reference: {cell_ref}")
 
     col = ord(cell_ref[0]) - ord('A')  # Convert column letter to index (0-based)
-    row = int(cell_ref[1:]) - 1
+    row = int(cell_ref[1:]) - 1 # Convert row number to index (0-based)
     return [row, col]
 
-def parse_cell(cell: str) -> tuple[Optional[str], Optional[str], Optional[float]]:
+def parse_cell(cell: str) -> tuple[Optional[str | float], Optional[str], Optional[str | float]]:
     """
     Parses a cell content:
     - number to float
@@ -38,6 +38,7 @@ def parse_cell(cell: str) -> tuple[Optional[str], Optional[str], Optional[float]
     # Check if the cell is a number
     #regular expression to match a number, which can be an integer or a float.
     float_pattern = r'(\d+(\.\d+)?)'
+    #regular expression to match a single reference like 'A1', 'B2', etc.
     reference_pattern = r'([A-Z][0-9]+)'
     if re.match(fr'^{float_pattern}$', cell):
         return (None, None, float(cell))  # It's a number
@@ -70,6 +71,7 @@ def read_cell(cell: str, spreadsheet: Spreadsheet, last_refs = []) -> float:
             return ref
         if ref in last_refs:
             raise ValueError(f"Circular reference detected: {ref} in {last_refs}")
+        
         row, col = cell_to_index(ref)
         if row < 0 or row >= len(spreadsheet) or col < 0 or col >= len(spreadsheet[0]):
             raise ValueError(f"Cell reference {ref} is out of bounds.")
