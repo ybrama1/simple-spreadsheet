@@ -39,7 +39,7 @@ print(result)
    - Examples: `=A1`, `=B2`, `=C3`
 
 3. **Mathematical Expressions**: Cell references with operations
-   - Examples: `=A1+5`, `=B2-3.5`
+   - Examples: `=A1+5`, `=B2-3.5`, `=B2+A1`, `=5+A2`
 
 ## API Reference
 
@@ -63,7 +63,7 @@ Converts a cell reference like 'B2' into matrix index (row, col).
 **Returns:**
 - List containing [row, col] indices (0-based)
 
-### `parse_cell(cell: str) -> tuple[Optional[str], Optional[str], Optional[float]]`
+### `parse_cell(cell: str) -> tuple[Optional[str], Optional[str], Optional[str]]`
 
 Parses cell content and returns reference, operator, and value.
 
@@ -71,7 +71,7 @@ Parses cell content and returns reference, operator, and value.
 - `cell`: Cell content string
 
 **Returns:**
-- Tuple containing (reference, operator, value)
+- Tuple containing (reference, operator, reference)
 
 ### `read_cell(cell: str, spreadsheet: Spreadsheet) -> float`
 
@@ -139,4 +139,3 @@ simple_spreadsheet/
 - Only supports addition (+) and subtraction (-) operations
 - No support for multiplication, division, or complex formulas
 - No support for string values or mixed data types
-- No circular reference detection

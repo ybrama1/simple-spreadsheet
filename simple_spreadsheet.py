@@ -44,7 +44,6 @@ def parse_cell(cell: str) -> tuple[Optional[str], Optional[str], Optional[float]
 
 
     #regular expression to match single reference or expression.
-    #group1 is the reference, group6 is the operator, and group7 is the second reference.
     match = re.match(fr'^=(?P<ref1>{reference_pattern}|{float_pattern})((?P<op>[\+\-])(?P<ref2>{float_pattern}|{reference_pattern}))?$', cell)
     if match:
         ref1 = match.group("ref1") if match.group("ref1") else None  # Reference like 'A1' or a number
