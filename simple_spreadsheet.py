@@ -42,7 +42,7 @@ def parse_cell(cell: str) -> tuple[Optional[str], Optional[str], Optional[float]
 
 
     #regular expression to match single reference or expression.
-    #group1 is the reference, group3 is the operator, and group4 is the value.
+    #group1 is the reference, group6 is the operator, and group7 is the second reference.
     match = re.match(fr'^=({reference_pattern}|{float_pattern})(([\+\-])({float_pattern}|{reference_pattern}))?$', cell)
     if match:
         ref1 = match.group(1) if match.group(1) else None  # Reference like 'A1' or a number
@@ -57,7 +57,7 @@ def parse_cell(cell: str) -> tuple[Optional[str], Optional[str], Optional[float]
         ref2 = float(ref2)
     return (ref1, op, ref2)
 
-def read_cell(cell: str, spreadsheet: Spreadsheet) -> float:
+def read_cell(cell: str, spreadsheet: Spreadsheet, last_refs = []) -> float:
     """
     Recursively evaluates the value of a cell
     """
@@ -65,12 +65,14 @@ def read_cell(cell: str, spreadsheet: Spreadsheet) -> float:
         """
         Returns the value of a cell reference.
         """
-        if ref.type(float):
+        if isinstance(ref, float):  # If ref is already a float, return it directly
             return ref
+        if ref in last_refs:
+            raise ValueError(f"Circular reference detected: {ref} in {last_refs}")
         row, col = cell_to_index(ref)
         if row < 0 or row >= len(spreadsheet) or col < 0 or col >= len(spreadsheet[0]):
             raise ValueError(f"Cell reference {ref} is out of bounds.")
-        return read_cell(spreadsheet[row][col], spreadsheet)
+        return read_cell(spreadsheet[row][col], spreadsheet, last_refs + [ref])  # Recursively read the referenced cell
     ref1, op, ref2 = parse_cell(cell)  # Parse the cell content
     ref1_value = 0
     if ref1:
@@ -85,4 +87,4 @@ def read_cell(cell: str, spreadsheet: Spreadsheet) -> float:
     elif op == '-':
         return ref1_value - ref2_value
     else:
-        return ref1_value  # No operation, just return the referenced cell value
+        return ref2_value or ref1_value  # No operation, just return the referenced cell value
