@@ -14,6 +14,17 @@ class TestReadCell(unittest.TestCase):
     def test_read_single_reference(self):
         self.assertEqual(read_cell("=A1", self.spreadsheet), 47.0)
         self.assertEqual(read_cell("=B2", self.spreadsheet), 42.0)
+    def test_read_empty_cell(self):
+        self.assertEqual(read_cell("", self.spreadsheet), 0.0)
+    def test_read_invalid_reference(self):
+        with self.assertRaises(ValueError):
+            read_cell("=X3", self.spreadsheet)
+        with self.assertRaises(ValueError):
+            read_cell("=A0", self.spreadsheet)
+        with self.assertRaises(ValueError):
+            read_cell("=B-1", self.spreadsheet)
+        with self.assertRaises(ValueError):
+            read_cell("=B6", self.spreadsheet)
 
     def test_read_expression(self):
         self.assertEqual(read_cell("=A1-3.5", self.spreadsheet), 43.5)

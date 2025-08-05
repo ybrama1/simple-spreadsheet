@@ -7,6 +7,8 @@ def read_spreadsheet(matrix: Spreadsheet) -> List[List[float]]:
     """
     Evaluates all cells in the matrix and returns a matrix of floats.
     """
+    if not matrix or not all(map(lambda row: len(row) == len(matrix[0]), matrix)):
+        raise ValueError("Invalid spreadsheet format: all rows must have the same number of columns.")
     evaluate_row = lambda row: list(map(lambda cell: read_cell(cell, matrix), row)) # Apply read_cell to each cell in the row
 
     Spreadsheet = list(map(evaluate_row, matrix)) # Apply evaluate_row to each row in the matrix

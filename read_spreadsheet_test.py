@@ -16,7 +16,8 @@ class TestReadSpreadsheet(unittest.TestCase):
         ])
     def test_empty_spreadsheet(self):
         spreadsheet = []
-        self.assertEqual(read_spreadsheet(spreadsheet), [])
+        with self.assertRaises(ValueError):
+            read_spreadsheet(spreadsheet)
     def test_single_cell_spreadsheet(self):
         spreadsheet = [["42"]]
         self.assertEqual(read_spreadsheet(spreadsheet), [[42.0]])
@@ -34,6 +35,15 @@ class TestReadSpreadsheet(unittest.TestCase):
             ["=A1", "42"],
             ["3.14", "=B2"],
             ["=A1+5", "A3"]
+        ]
+        with self.assertRaises(ValueError):
+            read_spreadsheet(spreadsheet)
+
+        spreadsheet = [
+            ["=B2+5", "=A1-3.5"],
+            ["=A1", "42"],
+            ["3.14", "=B2"],
+            ["=A1+5"]
         ]
         with self.assertRaises(ValueError):
             read_spreadsheet(spreadsheet)
