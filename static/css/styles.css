@@ -1,0 +1,236 @@
+/* 
+ * Simple Spreadsheet - Main Stylesheet
+ * Provides styling for the web-based spreadsheet interface
+ */
+
+/* ===== BASE STYLES ===== */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f5f5f5;
+}
+
+/* Main container for the entire application */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* ===== HEADER STYLES ===== */
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* ===== CONTROL PANEL STYLES ===== */
+/* Container for all control buttons and inputs */
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+/* Base button styling */
+.controls button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+/* Primary action buttons (Evaluate) */
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Success action buttons (Load Example) */
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #1e7e34;
+}
+
+/* Secondary action buttons (Clear, Resize) */
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+}
+
+/* Container for spreadsheet size controls */
+.size-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.size-controls label {
+    font-weight: bold;
+}
+
+/* Input fields for rows and columns */
+.size-controls input {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* ===== SPREADSHEET LAYOUT ===== */
+/* Container for both input and result spreadsheets */
+.spreadsheet-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Individual spreadsheet section (input or result) */
+.spreadsheet-section {
+    flex: 1;
+}
+
+/* Section titles (Input Spreadsheet, Evaluated Results) */
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+}
+
+/* ===== TABLE STYLES ===== */
+/* Main table styling for spreadsheet grid */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* All table cells (headers and data) */
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    min-width: 80px;
+}
+
+/* Table headers (column letters A, B, C...) */
+th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Row headers (row numbers 1, 2, 3...) */
+.row-header {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #333;
+    width: 40px;
+}
+
+/* ===== INPUT FIELD STYLES ===== */
+/* Text input fields within spreadsheet cells */
+input[type="text"] {
+    width: 100%;
+    border: none;
+    padding: 4px;
+    text-align: center;
+    background: transparent;
+    font-family: inherit;
+}
+
+/* Focused input field styling */
+input[type="text"]:focus {
+    outline: 2px solid #007bff;
+    background-color: #fff;
+}
+
+/* ===== RESULT DISPLAY STYLES ===== */
+/* Cells showing evaluated results */
+.result-cell {
+    background-color: #e8f4fd;
+    font-weight: bold;
+    color: #333;
+}
+
+/* ===== MESSAGE STYLES ===== */
+/* Error message styling */
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+/* Success message styling */
+.success {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+/* ===== FORMULA GUIDE STYLES ===== */
+/* Container for formula documentation */
+.formula-info {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+    margin-top: 20px;
+}
+
+.formula-info h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+/* Grid layout for formula examples */
+.examples {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Individual formula example styling */
+.example {
+    padding: 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+/* Mobile/tablet layout adjustments */
+@media (max-width: 768px) {
+    .spreadsheet-container {
+        flex-direction: column;
+    }
+    
+    .controls {
+        flex-wrap: wrap;
+    }
+}

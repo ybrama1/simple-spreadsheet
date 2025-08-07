@@ -246,21 +246,52 @@ pytest tests/ -v
 pip install -r requirements.txt
 ```
 
+## Code Organization
+
+The codebase is organized into separate, well-commented modules:
+
+### **Frontend (Web Interface)**
+- **`templates/index.html`**: Clean HTML structure with semantic markup and comments
+- **`static/css/styles.css`**: Comprehensive CSS with organized sections and comments
+- **`static/js/main.js`**: Main JavaScript controller with detailed function documentation
+- **`static/spreadsheet.js`**: Standalone JavaScript implementation (no backend required)
+- **`static/demo.html`**: Interactive demo page for the JavaScript version
+
+### **Backend (Python)**
+- **`simple_spreadsheet.py`**: Core spreadsheet logic and algorithms
+- **`app.py`**: Flask web server with REST API endpoints
+- **`tests/`**: Comprehensive test suite with pytest and parametrization
+
+### **Key Features of the Separation**
+- **Maintainability**: Each file has a single responsibility
+- **Readability**: Extensive comments explain functionality
+- **Modularity**: CSS and JS can be modified independently
+- **Reusability**: JavaScript implementation can work standalone
+- **Testing**: Separate test files for different components
+
 ## File Structure
 
 ```
 simple_spreadsheet/
-├── simple_spreadsheet.py      # Main implementation
+├── simple_spreadsheet.py      # Main Python implementation
 ├── app.py                     # Flask web server
 ├── requirements.txt           # Python dependencies
-├── templates/                 # Web interface templates
-│   └── index.html            # Main web interface
+├── templates/                 # Jinja2 templates for Flask
+│   └── index.html            # Main web interface (HTML only)
+├── static/                    # Static web assets
+│   ├── css/
+│   │   └── styles.css        # Main stylesheet
+│   ├── js/
+│   │   └── main.js           # Main JavaScript controller
+│   ├── spreadsheet.js        # Standalone JavaScript implementation
+│   └── demo.html             # JavaScript-only demo page
 ├── tests/                     # Test directory
 │   ├── __init__.py           # Tests package initialization
 │   ├── cell_to_index_test.py # Tests for cell reference conversion
 │   ├── parse_cell_test.py    # Tests for cell parsing
 │   ├── read_cell_test.py     # Tests for cell evaluation
-│   └── read_spreadsheet_test.py # Tests for full spreadsheet evaluation
+│   ├── read_spreadsheet_test.py # Tests for full spreadsheet evaluation
+│   └── test_web_api.py       # Tests for web API endpoints
 └── README.md                  # This file
 ```
 

@@ -3,7 +3,8 @@ from flask_cors import CORS
 import json
 from simple_spreadsheet import read_spreadsheet, parse_cell, cell_to_index, read_cell
 
-app = Flask(__name__)
+# Create Flask app with static file serving
+app = Flask(__name__, static_folder='static', static_url_path='/static')
 CORS(app)  # Enable CORS for all routes
 
 @app.route('/')
