@@ -12,7 +12,28 @@ A Python implementation of a basic spreadsheet evaluator that processes matrices
 
 ## Usage
 
-### Basic Example
+### Web Interface
+
+The easiest way to use the spreadsheet is through the web interface:
+
+1. **Start the web server:**
+   ```bash
+   python app.py
+   ```
+
+2. **Open your browser** and go to: `http://127.0.0.1:5000`
+
+3. **Use the interface:**
+   - Enter formulas and values in the input spreadsheet
+   - Click "Evaluate" to see the results
+   - Use "Load Example" to see a sample spreadsheet
+   - Resize the spreadsheet using the row/column controls
+
+### Python API
+
+You can also use the functions directly in Python:
+
+#### Basic Example
 
 ```python
 from simple_spreadsheet import read_spreadsheet
@@ -40,6 +61,91 @@ print(result)
 
 3. **Mathematical Expressions**: Cell references with operations
    - Examples: `=A1+5`, `=B2-3.5`, `=B2+A1`, `=5+A2`
+
+## Web API Endpoints
+
+The web server provides REST API endpoints for programmatic access:
+
+### `POST /api/evaluate`
+Evaluates a complete spreadsheet matrix.
+
+**Request Body:**
+```json
+{
+  "matrix": [
+    ["=B2+5", "=A1-3.5"],
+    ["=A1", "42"],
+    ["3.14", "=B2"]
+  ]
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "result": [[47.0, 43.5], [47.0, 42.0], [3.14, 42.0]],
+  "original": [["=B2+5", "=A1-3.5"], ["=A1", "42"], ["3.14", "=B2"]]
+}
+```
+
+### `POST /api/parse_cell`
+Parses a single cell formula.
+
+**Request Body:**
+```json
+{
+  "cell": "=A1+5"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "ref1": "A1",
+  "operator": "+",
+  "ref2": 5.0
+}
+```
+
+### `POST /api/cell_to_index`
+Converts cell reference to matrix indices.
+
+**Request Body:**
+```json
+{
+  "cell_ref": "B2"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "row": 1,
+  "col": 1
+}
+```
+
+### `POST /api/read_cell`
+Evaluates a single cell in context of a spreadsheet.
+
+**Request Body:**
+```json
+{
+  "cell": "=A1+5",
+  "matrix": [["42"], ["3.14"]]
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "result": 47.0
+}
+```
 
 ## API Reference
 
@@ -101,35 +207,60 @@ The library handles several error conditions:
 
 ## Testing
 
-The project includes comprehensive unit tests:
+The project uses pytest with parametrized tests for comprehensive coverage. All tests are organized in the `tests/` folder:
 
 ```bash
-python -m unittest cell_to_index_test.py
-python -m unittest parse_cell_test.py
-python -m unittest read_cell_test.py
-python -m unittest read_spreadsheet_test.py
+pytest tests/cell_to_index_test.py
+pytest tests/parse_cell_test.py
+pytest tests/read_cell_test.py
+pytest tests/read_spreadsheet_test.py
 ```
 
 Or run all tests:
 
 ```bash
-python -m unittest discover -p "*test.py"
+pytest tests/
+```
+
+Or simply:
+
+```bash
+pytest
+```
+
+Run with verbose output:
+
+```bash
+pytest tests/ -v
 ```
 
 ## Requirements
 
 - Python 3.6+
-- No external dependencies (uses only standard library)
+- Flask and Flask-CORS for web interface
+- pytest for testing
+- No other external dependencies (core library uses only standard library)
+
+**Install dependencies:**
+```bash
+pip install -r requirements.txt
+```
 
 ## File Structure
 
 ```
 simple_spreadsheet/
 ├── simple_spreadsheet.py      # Main implementation
-├── cell_to_index_test.py      # Tests for cell reference conversion
-├── parse_cell_test.py         # Tests for cell parsing
-├── read_cell_test.py          # Tests for cell evaluation
-├── read_spreadsheet_test.py   # Tests for full spreadsheet evaluation
+├── app.py                     # Flask web server
+├── requirements.txt           # Python dependencies
+├── templates/                 # Web interface templates
+│   └── index.html            # Main web interface
+├── tests/                     # Test directory
+│   ├── __init__.py           # Tests package initialization
+│   ├── cell_to_index_test.py # Tests for cell reference conversion
+│   ├── parse_cell_test.py    # Tests for cell parsing
+│   ├── read_cell_test.py     # Tests for cell evaluation
+│   └── read_spreadsheet_test.py # Tests for full spreadsheet evaluation
 └── README.md                  # This file
 ```
 
